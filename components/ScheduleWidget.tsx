@@ -1,6 +1,94 @@
-import React from 'react';
-import { SCHEDULE_DATA } from '../constants';
+import React, { useMemo } from 'react';
 import { ClassSession } from '../types';
+
+// Helper to generate dynamic schedule
+const generateSchedule = (): ClassSession[] => {
+  const schedule: ClassSession[] = [];
+  const today = new Date();
+  let currentId = 1;
+
+  // Generate for the next few days starting tomorrow
+  for (let i = 1; i <= 5; i++) {
+    const date = new Date(today);
+    date.setDate(today.getDate() + i);
+    
+    const dayOfWeek = date.getDay(); // 0 is Sunday
+    if (dayOfWeek === 0) continue; // Studio closed on Sundays
+
+    const month = date.toLocaleString('en-US', { month: 'short' });
+    const dateNum = date.getDate();
+    const dateStr = `${month} ${dateNum}`;
+    const dayName = i === 1 ? "Tomorrow" : date.toLocaleString('en-US', { weekday: 'long' });
+
+    // Define classes based on day
+    if (dayOfWeek === 6) { // Saturday
+       schedule.push({
+         id: currentId++,
+         day: dayName,
+         date: dateStr,
+         time: "9:00 AM",
+         classType: "Weekend Flow",
+         duration: "60 min",
+         instructor: "Nina",
+         status: "FULL"
+       });
+       schedule.push({
+         id: currentId++,
+         day: dayName,
+         date: dateStr,
+         time: "10:15 AM",
+         classType: "Advanced Reformer",
+         duration: "50 min",
+         instructor: "Nina",
+         status: "FULL"
+       });
+    } else { // Weekdays
+       schedule.push({
+         id: currentId++,
+         day: dayName,
+         date: dateStr,
+         time: "7:00 AM",
+         classType: "Reformer Align",
+         duration: "50 min",
+         instructor: "Nina",
+         status: "FULL"
+       });
+       schedule.push({
+         id: currentId++,
+         day: dayName,
+         date: dateStr,
+         time: "8:00 AM",
+         classType: "Sculpt & Lengthen",
+         duration: "50 min",
+         instructor: "Nina",
+         status: "FULL"
+       });
+       schedule.push({
+         id: currentId++,
+         day: dayName,
+         date: dateStr,
+         time: "5:30 PM",
+         classType: "Sunset Stretch",
+         duration: "50 min",
+         instructor: "Nina",
+         status: "FULL"
+       });
+       schedule.push({
+         id: currentId++,
+         day: dayName,
+         date: dateStr,
+         time: "6:30 PM",
+         classType: "Candlelight Flow",
+         duration: "55 min",
+         instructor: "Nina",
+         status: "FULL"
+       });
+    }
+  }
+  
+  // Limit to show a clean list, e.g., first 6 items
+  return schedule.slice(0, 6);
+};
 
 const ClassRow: React.FC<{ session: ClassSession }> = ({ session }) => (
   <div className="group flex flex-col md:flex-row md:items-center justify-between py-6 border-b border-stone-200 hover:bg-white transition-colors duration-300 px-4">
@@ -27,6 +115,8 @@ const ClassRow: React.FC<{ session: ClassSession }> = ({ session }) => (
 );
 
 const ScheduleWidget: React.FC = () => {
+  const scheduleData = useMemo(() => generateSchedule(), []);
+
   return (
     <section id="schedule" className="py-24 bg-stone-50 px-6">
       <div className="max-w-4xl mx-auto">
@@ -40,15 +130,9 @@ const ScheduleWidget: React.FC = () => {
         </div>
 
         <div className="bg-stone-50 border-t border-stone-200">
-          {SCHEDULE_DATA.map((session) => (
+          {scheduleData.map((session) => (
             <ClassRow key={session.id} session={session} />
           ))}
-        </div>
-
-        <div className="mt-12 text-center">
-             <button className="text-xs tracking-widest uppercase border-b border-stone-400 pb-1 text-stone-500 hover:text-stone-800 hover:border-stone-800 transition-colors">
-                Join the Waitlist
-             </button>
         </div>
       </div>
     </section>

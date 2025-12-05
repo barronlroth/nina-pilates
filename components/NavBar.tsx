@@ -29,7 +29,7 @@ const NavBar: React.FC = () => {
       <div className="max-w-6xl mx-auto px-6 flex justify-between items-center">
         {/* Logo */}
         <div className="text-xl md:text-2xl font-serif tracking-widest text-stone-800 uppercase cursor-pointer">
-          Nina Pilates
+          Nina Polic Pilates
         </div>
 
         {/* Desktop Links */}
